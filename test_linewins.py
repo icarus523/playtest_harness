@@ -68,3 +68,12 @@ class test_LineWins(PlayTest_UnitTest):
 
         self.assertEqual(line_win.getPayTable(), paytable_l_free_1c_2c_5c_10c)
 
+    def test_compareLinePatterns(self): 
+
+        line_number = 1
+        pattern =  [True,     True,   True,   True,   True,   False,  False,  False,  False,  False,  False,  False,  False,  False,  False]
+        line_win = LineWin(line_number, 5, 'HOTEL', False, 1, self.bet_multiplier, 'base', self.game_denom)
+
+        self.assertTrue(line_win.compareLineWinPattern(pattern))
+
+        
