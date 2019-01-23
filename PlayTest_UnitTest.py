@@ -42,18 +42,21 @@ class PlayTest_UnitTest(unittest.TestCase):
 
     def displayScatterPosition(self, scatter_pos_l):
         k = 1
-
+        outputstr = ''
         for position in scatter_pos_l: 
             if k % 5 == 0: 
                 if position == True: 
                     print("[X]\t" , end='\n')
+                    outputstr = outputstr + "[X]\t" + '\n'                    
                 else: 
                     print("X\t" , end='\n')
+                    outputstr = outputstr + "X\t"  + '\n'                    
             else: 
                 if position == True:
                     print("[X]\t", end = '')
+                    outputstr = outputstr + "[X]\t"                    
                 else: 
                     print("X\t" , end='')
-        k = k + 1
+                    outputstr = outputstr + "X\t"
 
-                                            
+            k = k + 1
