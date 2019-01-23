@@ -29,7 +29,8 @@
                     ],
                     "substitute_win":false,
                     "symbol":9,
-                    "win_type":"linewin"
+                    "win_type":"linewin",
+                    "prize":500
                 },
                 {
                     "bet":10,
@@ -58,7 +59,8 @@
                     ],
                     "substitute_win":false,
                     "symbol":0,
-                    "win_type":"linewin"
+                    "win_type":"linewin",
+                    "prize":50
                 }
             ],
             "id":1
@@ -92,7 +94,8 @@
                     ],
                     "substitute_win":false,
                     "symbol":0,
-                    "win_type":"linewin"
+                    "win_type":"linewin",
+                    "prize":3000
                 }
             ],
             "id":2
@@ -126,7 +129,8 @@
                     ],
                     "substitute_win":false,
                     "symbol":0,
-                    "win_type":"scatterwin"
+                    "win_type":"scatterwin",
+                    "prize":1500
                 }
             ],
             "id":3

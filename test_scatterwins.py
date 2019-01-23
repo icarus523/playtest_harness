@@ -15,16 +15,19 @@ class test_ScatterWins(PlayTest_UnitTest):
         self.game_denom = 1
 
         scatterwin_pos = [True,     True,   True,   True,   True,   False,  False,  False,  False,  False,  False,  False,  False,  False,  False]
+        five_of_a_kind_scatter = 100 # 5 of a Kinda '$' for 1c denom
+        expected_prize = self.bet_multiplier * self.lines_played * five_of_a_kind_scatter 
 
-        five_scatter_win = ScatterWin(5, 'DOLLAR', self.game_denom, self.bet_multiplier, self.lines_played, 'base', scatterwin_pos)
+        five_scatter_win = ScatterWin(expected_prize, 5, 'DOLLAR', self.game_denom, self.bet_multiplier, \
+            self.lines_played, 'base', scatterwin_pos)
 
         scat_idx = scatter_sym_index['DOLLAR']
-        five_of_a_kind_scatter = 100 # 5 of a Kinda '$' for 1c denom
 
-        expected_prize = self.bet_multiplier * self.lines_played * five_of_a_kind_scatter 
-        
         self.assertEqual(five_scatter_win.getScatterWin(), expected_prize)
 
+    # note that this is an invalid test
+    # there is no 5 scatter wins during free games. 
+    # this should be asserted when checking of data i.e. creation of the scatter win object
     def test_5_scatterwins_freegames_1c(self):
 
         # Set Bet Options
@@ -32,17 +35,16 @@ class test_ScatterWins(PlayTest_UnitTest):
         self.lines_played = 30 
         self.game_denom = 1
 
-        scatterwin_pos = [True,     True,   True,   True,   True,   False,  False,  False,  False,  False,  False,  False,  False,  False,  False]
+        scatterwin_pos = [True,   True,   True,   True,   True,   False,  False,  False,  False,  False,  False,  False,  False,  False,  False]
+        # 5 of a Kinda '$' for 1c denom
 
-        five_scatter_win_freegames = ScatterWin(5, 'DOLLAR', self.game_denom, self.bet_multiplier, 
-            self.lines_played, 'free_games', scatterwin_pos)
+        five_of_a_kind_scatter_free_game = 0 
+        expected_prize = self.bet_multiplier * self.lines_played * five_of_a_kind_scatter_free_game 
+
+        five_scatter_win_freegames = ScatterWin(expected_prize, 5, 'DOLLAR', self.game_denom, \
+            self.bet_multiplier, self.lines_played, 'free_games', scatterwin_pos)
         
-        scat_idx = scatter_sym_index['DOLLAR']
-        five_of_a_kind_scatter = 0 # 5 of a Kinda '$' for 1c denom, for Free Games
-
-        expected_prize = self.bet_multiplier * self.lines_played * five_of_a_kind_scatter 
-
-        self.assertEqual(five_scatter_win_freegames.getScatterWin(), expected_prize)
+        self.assertEqual(five_scatter_win_freegames.getScatterWin(), five_of_a_kind_scatter_free_game)
 
 
     def test_4_scatterwins_base_100c(self): 
@@ -53,13 +55,14 @@ class test_ScatterWins(PlayTest_UnitTest):
         self.game_denom = 100
         scatterwin_pos = [True,     True,   True,   True,   False,   False,  False,  False,  False,  False,  False,  False,  False,  False,  False]
 
-        four_scatter_win = ScatterWin(4, 'DOLLAR', self.game_denom, self.bet_multiplier, self.lines_played, 'base', scatterwin_pos)
-
         # 4 of a Kinda '$' for 100c denom
         scat_idx = scatter_sym_index['DOLLAR']
-        five_of_a_kind_scatter = 20 
+        four_of_a_kind_scatter = 20 
         total_credits_bet = self.bet_multiplier * self.lines_played
-        expected_prize = total_credits_bet * five_of_a_kind_scatter 
+        expected_prize = total_credits_bet * four_of_a_kind_scatter 
+
+        four_scatter_win = ScatterWin(expected_prize, 4, 'DOLLAR', self.game_denom, self.bet_multiplier, \
+            self.lines_played, 'base', scatterwin_pos)
 
         self.assertEqual(four_scatter_win.getScatterWin(), expected_prize)
 
@@ -71,14 +74,15 @@ class test_ScatterWins(PlayTest_UnitTest):
         self.lines_played = 30 
         self.game_denom = 100
         scatterwin_pos = [True,     True,   True,   True,   False,   False,  False,  False,  False,  False,  False,  False,  False,  False,  False]
-
-        four_scatter_win = ScatterWin(4, 'DOLLAR', self.game_denom, self.bet_multiplier, self.lines_played, 'free_games', scatterwin_pos)
-
+        
         # 4 of a Kinda '$' for 100c denom
         scat_idx = scatter_sym_index['DOLLAR']
         four_of_a_kind_scatter = 20 
         total_credits_bet = self.bet_multiplier * self.lines_played
         expected_prize = total_credits_bet * four_of_a_kind_scatter 
+        
+        four_scatter_win = ScatterWin(expected_prize, 4, 'DOLLAR', self.game_denom, self.bet_multiplier, \
+            self.lines_played, 'free_games', scatterwin_pos)
 
         self.assertEqual(four_scatter_win.getScatterWin(), expected_prize)
 
@@ -90,12 +94,12 @@ class test_ScatterWins(PlayTest_UnitTest):
         self.game_denom = 2
         scatterwin_pos = [True,     True,   True,   False,   False,   False,  False,  False,  False,  False,  False,  False,  False,  False,  False]
 
-        four_scatter_win = ScatterWin(3, 'DOLLAR', self.game_denom, self.bet_multiplier, self.lines_played, 'free_games', scatterwin_pos)
-
-        # 4 of a Kinda '$' for 100c denom
+        # 3 of a Kinda '$' for 100c denom
         scat_idx = scatter_sym_index['DOLLAR']
         five_of_a_kind_scatter = 5 
         total_credits_bet = self.bet_multiplier * self.lines_played
         expected_prize = total_credits_bet * five_of_a_kind_scatter 
 
-        self.assertEqual(four_scatter_win.getScatterWin(), expected_prize)
+        three_scatter_win = ScatterWin(expected_prize, 3, 'DOLLAR', self.game_denom, self.bet_multiplier, self.lines_played, 'free_games', scatterwin_pos)
+
+        self.assertEqual(three_scatter_win.getScatterWin(), expected_prize)

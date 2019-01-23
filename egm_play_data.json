@@ -27,6 +27,7 @@
                         false,
                         false
                     ],
+                    "prize":500,
                     "substitute_win":false,
                     "symbol":9,
                     "win_type":"linewin"
@@ -56,6 +57,7 @@
                         false,
                         false
                     ],
+                    "prize":50,
                     "substitute_win":false,
                     "symbol":0,
                     "win_type":"linewin"
@@ -90,6 +92,7 @@
                         true,
                         true
                     ],
+                    "prize":500,
                     "substitute_win":false,
                     "symbol":9,
                     "win_type":"linewin"
@@ -124,6 +127,7 @@
                         true,
                         true
                     ],
+                    "prize":1500,
                     "substitute_win":false,
                     "symbol":0,
                     "win_type":"scatterwin"

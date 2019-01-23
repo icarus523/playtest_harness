@@ -22,7 +22,12 @@ class test_PlayTestHarness(PlayTest_UnitTest):
         # Third Game is: 
         #   3 x Scatters = 5 * 300 = 1500 credits
 
+        index = 0
+        expected_line_prizes = [550, 3000, 0]
+        expected_scatter_prizes = [0, 0, 1500]
+
         for game in myplaytest.games_l: 
+
             symbol = ''
             linewin_total = 0 
             scatterwin_total = 0
@@ -33,9 +38,10 @@ class test_PlayTestHarness(PlayTest_UnitTest):
                     if v == linewin.symbol:
                         symbol = k
 
-                print(linewin.number_of_symbols, "x", symbol, '=', linewin.getLineWin())
+                print("Line Win:", linewin.number_of_symbols, "x", symbol, '=', linewin.getLineWin())
                 linewin_total = linewin_total + linewin.getLineWin()
-                self.assertEqual(linewin_total, 3550)
+            
+            self.assertEqual(linewin_total, expected_line_prizes[index])
 
             # calculate scatter win total 
             for scatterwin in game.scatterwin_list: 
@@ -43,9 +49,13 @@ class test_PlayTestHarness(PlayTest_UnitTest):
                     if v == scatterwin.symbol:
                         symbol = k
 
-                print(scatterwin.number_of_symbols, "x", symbol, '=', scatterwin.getScatterWin())
+                print("Scatter Win: ", scatterwin.number_of_symbols, "x", symbol, '=', scatterwin.getScatterWin())
                 scatterwin_total = scatterwin_total + scatterwin.getScatterWin()
-                self.assertEqual(scatterwin_total, 1500)
+            
+            self.assertEqual(scatterwin_total, expected_scatter_prizes[index])
 
-            print("GameID: " + str(game.gameID) + ', Game Prize: ' + str(linewin_total) + " + " +  str(scatterwin_total))
+            print("GameID: " + str(game.gameID) + ', Game Prize: ' + str(linewin_total) + " + " +  str(scatterwin_total) + " = " + str(game.calculateWin()))
 
+            self.assertEqual(game.calculateWin(), expected_line_prizes[index] + expected_scatter_prizes[index])
+
+            index = index + 1
