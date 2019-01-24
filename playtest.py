@@ -39,7 +39,6 @@ scatter_valid_positions_free_game = [
     True, True, True, True, True 
 ]
 
-
 # Paytables
 # Base game for 1c, 2c, 5c and 10c denomination
 paytable_l_base_1c_2c_5c_10c = [
@@ -273,7 +272,11 @@ class LineWin():
         self.prize = prize
 
         self.linenumber = line_number
-        assert(self.linenumber in list(range(1,GAME_MAXLINES))) # 1-GAME_MAXLINES 
+        line_list = list(range(1,GAME_MAXLINES))
+        if (self.linenumber in line_list) == False:
+            print("line number: ", self.linenumber, "line_list", line_list)
+
+        assert(self.linenumber in line_list) # 1-GAME_MAXLINES 
         
         self.number_of_symbols = n_of_sym
         assert(self.number_of_symbols in list(range(1,6))) # 1-5 symbols
@@ -381,7 +384,7 @@ class FreeGamesFeature():
 class ScatterWin():
 
     # validate data input
-    def __init__(self, prize, n_of_sym, sym, denom, bet, lines, win_type, positions_list):
+    def __init__(self, prize, n_of_sym, sym, denom, bet, lines, win_type, positions_list=scatter_valid_positions_base_game):
         self.prize = prize
 
         self.denom = denom
@@ -412,8 +415,8 @@ class ScatterWin():
         assert(self.positions_list.count(True) == self.number_of_symbols)
 
         # Apply Game Rules
-        assert(self.checkScatterRules_Scatter_Positions() == True)
-        assert(self.checkScatterRules_Number_of_Scatters() == True)
+        #assert(self.checkScatterRules_Scatter_Positions() == True)
+        #assert(self.checkScatterRules_Number_of_Scatters() == True)
 
     # this needs to be modified per game. 
     def checkScatterRules_Scatter_Positions(self): 
@@ -547,8 +550,7 @@ class PlayTest():
         self.doChecklist()
 
     def doChecklist(self): 
-
-
+        # Verify that the game has paid out on all expected lines
         lines_won = list() 
         for game in self.games_l: 
             for linewin in game.linewin_list: 
@@ -562,7 +564,17 @@ class PlayTest():
             print("Paylines that have not been awarded a prize: ")
             print(list(set(expected_game_lines_to_win) - set(play_test_lines_won)))
 
+        # Verify that the substitute symbols have paid out for all expected symbols
+        substitute_win = list() 
+        subwin_symbols_l = list() 
 
+        for game in self.games_l: 
+            for linewin in game.linewin_list: 
+                if linewin.substitute_win == True: 
+                    substitute_win.append(linewin)
+
+            for win in substitute_win:
+                subwin_symbols_l.append(win.symbol)
 
     def processGames(self): 
         games_list = list()
@@ -589,8 +601,13 @@ class PlayTest():
                         if v == win['symbol']: 
                             symbol = k
 
-                    scatterwin = ScatterWin(win['prize'], win['number_of_symbols'], symbol, win['den'], \
-                        win['bet'], win['lines_played'], win['game_type'], win['pattern'])
+                    if win['pattern']:
+                        scatterwin = ScatterWin(win['prize'], win['number_of_symbols'], symbol, win['den'], \
+                            win['bet'], win['lines_played'], win['game_type'], win['pattern'])
+                    else: 
+                        scatterwin = ScatterWin(win['prize'], win['number_of_symbols'], symbol, win['den'], \
+                        win['bet'], win['lines_played'], win['game_type'])
+
                     scatterwin_l.append(scatterwin)
                 # todo: bonus prizes / progressives / features / free games
 
