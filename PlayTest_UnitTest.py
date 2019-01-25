@@ -1,6 +1,6 @@
 import unittest
 
-from playtest import paylines_30
+from playtest_harness import paylines_30, symbol_index
 
 class PlayTest_UnitTest(unittest.TestCase):
 
@@ -9,6 +9,7 @@ class PlayTest_UnitTest(unittest.TestCase):
         self.bet_multiplier = 10 
         self.lines_played = 30 
         self.game_denom = 1
+
 
     def displayPlayline(self, line_number): 
         k = 1

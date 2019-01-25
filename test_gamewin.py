@@ -1,10 +1,14 @@
 import random
+import unittest
 
 from PlayTest_UnitTest import PlayTest_UnitTest
-from playtest import LineWin, symbol_index, ScatterWin, GameWin
+from playtest_harness import LineWin, symbol_index, ScatterWin, GameWin
 
 class test_GameWin(PlayTest_UnitTest):
 
+    # Game Win - 3 Line Wins only. 
+    # Line 1, 2, 3
+    # Higest Paying Symbol in game, 5 of a kind, 4 of a kind, 3 of a kind
     def test_GameWin_3_Linewins(self):
 
         linewin_l = list() 
@@ -46,4 +50,16 @@ class test_GameWin(PlayTest_UnitTest):
             100 * self.bet_multiplier * self.lines_played
 
         self.assertTrue(gamewin_3_line_and_scatter.calculateWin() == expected_prize) 
+
+    @unittest.skip('to do')
+    def test_caculate_15_free_games_feature(self): 
+        print("skipping")
+
+    @unittest.skip('to do')
+    def test_game_Linked_Progressive_Win(self): 
+        print("skipping")
+
+    @unittest.skip('to do')
+    def test_game_Standalone_Progressive_Win(self): 
+        print("skipping")        
 
