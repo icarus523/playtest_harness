@@ -1,7 +1,8 @@
 import unittest
 
-from playtest import PlayTest, ScatterWin, LineWin, GameWin, symbol_index, scatter_sym_index, paytable_scat_basegame_1c_2c, paytable_scat_basegame_5c_10c_100c, paytable_scat_freegame_1c_2c_5c_10c, paytable_scat_freegame_100c
+from playtest_harness import ScatterWin, LineWin, GameWin, symbol_index, scatter_sym_index, paytable_scat_basegame_1c_2c, paytable_scat_basegame_5c_10c_100c, paytable_scat_freegame_1c_2c_5c_10c, paytable_scat_freegame_100c
 from PlayTest_UnitTest import PlayTest_UnitTest
+from PlayTest import PlayTest
 
 class test_PlayTestHarness(PlayTest_UnitTest):
 

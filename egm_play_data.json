@@ -134,6 +134,41 @@
                 }
             ],
             "id":3
+        },
+            {
+            "game_details":[
+                {
+                    "bet":10,
+                    "den":1,
+                    "game_type":"free_games",
+                    "line_number":0,
+                    "lines_played":30,
+                    "multiplier":1,
+                    "number_of_symbols":4,
+                    "prize":6000,
+                    "substitute_win":false,
+                    "symbol":0,
+                    "win_type":"scatterwin",
+                    "pattern":[
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        true,
+                        true,
+                        true,
+                        true
+                    ]
+                }
+            ],
+            "id":4
         }
     ]
 }
