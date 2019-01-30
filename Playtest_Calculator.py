@@ -1,4 +1,5 @@
 import sys
+import unittest
 
 from playtest_harness import LineWin, ScatterWin, GameWin
 
@@ -7,12 +8,22 @@ from Wild_Nights import Wild_Nights, GAME_MAXLINES, GAME_DENOM, GAME_BET_OPTION,
     scatter_valid_positions_base_game, scatter_valid_positions_free_game, scatter_sym_index, symbol_index, \
     paytable_l_base_1c_2c_5c_10c, paytable_l_free_1c_2c_5c_10c, paytable_l_base_100c, paytable_l_free_100c, \
     paytable_scat_basegame_1c_2c, paytable_scat_basegame_5c_10c_100c, paytable_scat_freegame_1c_2c_5c_10c, \
-    paytable_scat_freegame_100c, paylines_1, paylines_5, paylines_10, paylines_25
+    paytable_scat_freegame_100c, paylines_1, paylines_5, paylines_10, paylines_30
 
 from tkinter import *
 from tkinter import ttk
 
 VERSION = "1.0"
+
+
+class Playtest_Cacluclator_Unittest(unittest.TestCase):
+
+    def setUp(self):
+        # Set Bet Options
+        self.bet_multiplier = 10 
+        self.lines_played = 30 
+        self.game_denom = 1
+
 
 class Playtest_Calculator(): 
 
@@ -29,6 +40,7 @@ class Playtest_Calculator():
 
         self.my_game = Wild_Nights() # instantiate the game
         self.win_type = ""
+        self.game_pattern = list()
 
         # Prompt for User Input in Menu
         #while not complete:
@@ -110,7 +122,9 @@ class Playtest_Calculator():
         for symbol,_ in symbol_index.items(): 
             linewin_symbol_list.append(symbol)
 
-        if symbol_chosen in linewin_symbol_list:
+        print(linewin_symbol_list, self.cbSymbol.get())
+
+        if str(self.cbSymbol.get()) in linewin_symbol_list:
             line_win_game = True 
         else: 
             line_win_game = False         
@@ -118,18 +132,57 @@ class Playtest_Calculator():
         return line_win_game
 
     def getWin(self): 
+        win = "" 
+        line_win = None
 
         # get win type: lines/scatter
-        symbol_chosen = self.cbSymbol.get() 
+        symbol_chosen = str(self.cbSymbol.get())
 
         # Line Win or Scatter Win? 
         if self.line_win_game == None: 
             self.line_win_game = self.getWinTypeLine_Scatter()   
 
-        # line_win = LineWin(300 * self.bet_multiplier, line_number, 5, 'HOTEL', False, 1, self.bet_multiplier, 'base', self.game_denom)
-
         if self.line_win_game: 
-            self.displayPossibleLineWins()
+            # self.displayPossibleLineWins()
+            self.HandleRadioButton() # get win_type
+
+            paytable = self.my_game.getPayTable(int(self.denom), self.win_type)
+            
+            prize = paytable[symbol_index[symbol_chosen]][int(self.number_of_symbols)-1]
+            line_number = self.getLine(self.game_pattern)
+
+            # line_win = LineWin(300 * self.bet_multiplier, line_number, 5, 'HOTEL', False, 1, self.bet_multiplier, 'base', self.game_denom)
+            
+            line_win = LineWin(prize * self.bet_multiplier, line_number, self.number_of_symbols, symbol_chosen, False, 1, self.bet_multiplier,  self.win_type, self.denom)
+ 
+            return line_win.getLineWin()
+        
+        else: #scatter win
+            self.HandleRadioButton() # get win_type
+            paytable = self.my_game.getPayTable(int(self.denom), self.win_type)
+
+
+            return 
+
+    def getLine(self, pattern): 
+        paylines = {} 
+
+        if self.lines_played == 1: 
+            paylines = paylines_1
+        elif self.lines_played == 5:
+            paylines = paylines_5
+        elif self.lines_played == 10: 
+            paylines = paylines_10
+        elif self.lines_played == 25: 
+            paylines = paylines_25
+        elif self.lines_played == 30: 
+            paylines = paylines_30
+        else: 
+            print("Error could not determine paylines, check self.lines_played")
+
+        for k,v in paylines.items(): 
+            if paylines == v: 
+                return k
 
     def displayPossibleLineWins(self):
         print("todo: displayPossibleLineWins")
@@ -141,13 +194,32 @@ class Playtest_Calculator():
             self.win_type = 'free_games'
 
     def handleComboBoxChanges(self, cmd): 
-        print("something")
+        self.init() 
+
+    def init(self):
+        self.number_of_symbols = 0
+        self.line_win_game = None
+        self.game_pattern = list() 
+        self.button_pressed_list = list() 
+
+        self.HandleRadioButton() # update self.win_type
+
+        # set all buttons to init
+        for button in self.button_l:
+            button['text'] = "X"
+
+        # reset all values to False. 
+        for pos in self.game_pattern: 
+            pos = False
+
 
     def handleButtonPress(self, event): 
         pressed_button = event.widget
         
         index = self.button_l.index(pressed_button)
         pattern_l = list()
+
+        self.line_win_game = self.getWinTypeLine_Scatter()   
 
         # Toggle Symbol locations
         if pressed_button["text"] == "[X]":
@@ -159,28 +231,72 @@ class Playtest_Calculator():
 
         # determine number of "pressed buttons"
         self.number_of_symbols = len(self.button_pressed_list)
+        self.game_pattern = self.translatePressedNumbers(self.button_pressed_list)
 
-        # determine possible line wins that match the pattern. 
-        pattern = self.translatePressedNumbers(self.button_pressed_list)
+        valid_win_l = self.isValidLineWin(self.game_pattern)
 
-        print(pattern)
+        if not valid_win_l == None: 
+            for win in valid_win_l: 
+                if self.number_of_symbols > 0 and win['valid_win'] == True : 
+                    # determine possible line wins that match the pattern. 
+                    
+                    # print("button number: " + str(index) + " was pressed")
+                    print(str(self.number_of_symbols) + " x " + \
+                        str(self.cbSymbol.get()) + " symbols, Line Win: " + str(self.getWin()))
 
-        print("button number: " + str(index) + " was pressed")
-        print(self.button_pressed_list, str(self.number_of_symbols) + " Symbols")
+                elif self.number_of_symbols > 0 and self.line_win_game == False: # scatter
+                    print(str(self.number_of_symbols) + " x " + \
+                        str(self.cbSymbol.get()) + " symbols, Scatter Win: " + str(self.getWin()))
+                else: 
+                    print("no win")
+
+
+    def getPayLine(self): 
+        paylines = dict() 
+
+        if self.lines_played == 1: 
+            paylines = paylines_1
+        elif self.lines_played == 5:
+            paylines = paylines_5
+        elif self.lines_played == 10: 
+            paylines = paylines_10
+        elif self.lines_played == 25: 
+            paylines = paylines_25
+        elif self.lines_played == 30: 
+            paylines = paylines_30
+        else: 
+            print("Could not determine the paylines to use!")
+            return None
+        return paylines
+
+    def isValidLineWin(self, pattern):
+
+        paylines_l = self.getPayLine()
+        winning_lines_l = list() 
+
+        for line_number, pos in paylines_l.items(): 
+            print(line_number, pos)
+            if set(pattern).issubset(set(pos)):
+                winning_lines_l.append({ 'valid_win': True, 'line_number': line_number})
+
+        return winning_lines_l 
 
     def translatePressedNumbers(self, button_l): 
         pattern_l = list(range(0, 15))
         positions = list(range(0, 15))
-        print("buttons: ", button_l, positions)
+
+        # Sets True elements
         for button in button_l:
             idx = positions.index(button) 
-            print("idx: ", idx)
+            # print("idx: ", idx)
             if not idx == None:
                 pattern_l[idx] = True
-                
+
+        # Set all non True Elements to False                
         for pos in pattern_l:
             if not pos == True:
-                pos = False
+                idx = pattern_l.index(pos) 
+                pattern_l[idx] = False
 
         return pattern_l
 
@@ -193,9 +309,6 @@ class Playtest_Calculator():
         print("\nScatter Symbols: ")
         for k,v in sorted(scatter_sym_index.items()):
             print("\t"+k) 
-
-
-            return None
 
     def ProcessOption(self, opt):
         complete = False

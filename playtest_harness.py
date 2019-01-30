@@ -19,10 +19,10 @@ class LineWin():
 
         self.linenumber = line_number
         line_list = list(range(1,GAME_MAXLINES+1))
-        if (self.linenumber in line_list) == False:
-            print("line number: ", self.linenumber, "line_list", line_list)
+        #if (self.linenumber in line_list) == False:
+        #    print("line number: ", self.linenumber, "line_list", line_list)
 
-        assert(self.linenumber in line_list) # 1-GAME_MAXLINES 
+        # assert(self.linenumber in line_list) # 1-GAME_MAXLINES 
         
         self.number_of_symbols = n_of_sym
         assert(self.number_of_symbols in list(range(1,6))) # 1-5 symbols
